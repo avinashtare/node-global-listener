@@ -1,11 +1,13 @@
 {
   "name": "node-global-listener",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A lightweight and efficient Node.js package for global keyboard and mouse event listening. Supports reading and writing key inputs, tracking mouse pointers, and operating in the background.",
   "main": "build/index.js",
   "scripts": {
-    "build": "tsc",
     "dev": "nodemon --ext ts --exec ts-node ./src/test.ts",
+    "npm-push": "npm run build && npm publish",
+    "build": "npm run copy && tsc",
+    "copy": "cpx \"src/**/!(*.ts)\" build/ --clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -27,6 +29,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.13.10",
+    "cpx": "^1.5.0",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
