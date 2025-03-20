@@ -140,10 +140,29 @@ class KeyEventReader extends EventEmitter {
 
   // emmit events
   private emmitEvents(KeyData: KeyData) {
+    // handle keydown up
     if (KeyData.KeyUp) {
       this.emit("keyUp", KeyData);
-    } else if (KeyData.KeyDown) {
+    }
+    // handle keydown emmit
+    else if (KeyData.KeyDown) {
       this.emit("keyDown", KeyData);
+    }
+
+    // handle key press
+    if (KeyData.KeyDown) {
+      // filter number alphabet & punctuations & spacial key
+      if (
+        // number mapping
+        (KeyData.KeyCode >= 48 && KeyData.KeyCode <= 57) ||
+        // Punctuation & special mapping
+        (KeyData.KeyCode >= 186 && KeyData.KeyCode <= 222) ||
+        // Alphabet mapping
+        (KeyData.KeyCode >= 65 && KeyData.KeyCode <= 90)
+      ) {
+        // console.log("Key 1: " + KeyData.key);
+        this.emit("keyPress", KeyData);
+      }
     }
   }
 }

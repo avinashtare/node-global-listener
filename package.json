@@ -4,7 +4,7 @@
   "description": "A lightweight and efficient Node.js package for global keyboard and mouse event listening. Supports reading and writing key inputs, tracking mouse pointers, and operating in the background.",
   "main": "build/index.js",
   "scripts": {
-    "dev": "nodemon --ext ts --exec ts-node ./src/test.ts",
+    "dev": "nodemon ./src/test.ts",
     "npm-push": "npm run build && npm publish",
     "build": "npm run copy && tsc",
     "copy": "cpx \"src/**/!(*.ts)\" build/ --clean",

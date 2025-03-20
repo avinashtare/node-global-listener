@@ -10,7 +10,7 @@ void PressKey(WORD keyCode)
 
 int main()
 {
-    Sleep(2000);    // Give some time to switch to a text editor
-    PressKey(0xAD); // Simulate pressing 'A' (0x41 is the virtual keycode for 'A')
+    Sleep(2000);  // Give some time to switch to a text editor
+    PressKey(65); // Simulate pressing 'A' (0x41 is the virtual keycode for 'A')
     return 0;
 }
