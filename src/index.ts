@@ -1,3 +1,3 @@
-import { KeyEventReader } from "./lib/windows/index";
+import { KeyEventReader } from "./lib/lib";
 
 export { KeyEventReader };

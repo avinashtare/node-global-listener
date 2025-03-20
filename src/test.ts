@@ -15,6 +15,6 @@ const keyEvent = new KeyEventReader();
 // });
 
 // Handle Key Press
-// keyEvent.on("keyPress", (keyData: KeyData) => {
-//   console.log(`KeyUp: `, keyData.key);
-// });
+keyEvent.on("keyPress", (keyData: KeyData) => {
+  console.log(`KeyUp: `, keyData.key);
+});
