@@ -26,6 +26,7 @@ const keyMap: any = {
   40: "ArrowDown",
   45: "Insert",
   46: "Delete",
+  91: "Window",
   93: "Menu",
   144: "Num Lock",
 

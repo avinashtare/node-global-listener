@@ -1,6 +1,6 @@
 # node-global-listener
 
-A lightweight and efficient Node.js package for global keyboard and mouse event listening. Supports reading and writing key inputs, tracking mouse pointers, and operating in the background.
+A lightweight and efficient Node.js package for capturing global keyboard and mouse events, supporting key presses, mouse movements, input simulation, and background operation. 🚀
 
 ## Installation
 
@@ -8,15 +8,31 @@ A lightweight and efficient Node.js package for global keyboard and mouse event 
 npm install node-global-listener
 ```
 
-## Usage
+**Compatibility Table:**
+
+| Platform | Compatible? | Tested      |
+| -------- | ----------- | ----------- |
+| Windows  | True        | Win10,Win11 |
+| Mac      | Coming Soon | Null        |
+| Linux    | Coming Soon | Null        |
+
+## Features
+
+- ✅ Keyboard Events: Detect and record key presses, releases, and combinations.
+- ✅ Mouse Events: Track mouse position, clicks, and button presses.
+- ✅ Input Simulation: Read and write keyboard inputs programmatically.
+- ✅ Background Operation: Works seamlessly without interfering with other applications.
+  Ideal for automation, keylogging (ethical use), and input monitoring. 🚀
 
 ### Importing the Module
 
 ```ts
-import { KeyEventReader } from "node-global-listener";
+import { KeyboardHandler, KeyEventReader } from "node-global-listener";
 ```
 
 ### Start Listening to Keyboard Events
+
+### `KeyEventReader`
 
 ```ts
 const keyEvent = new KeyEventReader();
@@ -27,18 +43,21 @@ keyEvent.on("keyDown", (keyData) => {
 });
 
 // Listen for keyUp events
-// keyEvent.on("keyUp", (keyData) => {
-//     console.log(keyData);
-// });
+keyEvent.on("keyUp", (keyData) => {
+  console.log(keyData);
+});
 ```
 
-## Features
+### Start Listening to Press (Writing) Keys
 
-- ✅ Global keyboard event tracking (Only key reading implemented)
-- ✅ Works in the background
-- 🔜 Global mouse event tracking (Coming soon)
-- 🔜 Key writing support (Coming soon)
-- ✅ Lightweight and efficient
+### `KeyboardHandler`
+
+```ts
+const Keys = new KeyboardHandler();
+Keys.KeyPress("A"); // key press
+Keys.KeyDown("b"); // key down
+Keys.KeyUp("B"); // key up
+```
 
 ## API
 
@@ -48,7 +67,7 @@ Class for listening to global keyboard events.
 
 #### Methods:
 
-- `on(event: "keyDown", callback: (keyData: KeyData) => void): void` - Listens for key press events.
+- `on(event: "keyDown" | "keyUp" | "keyPress" , callback: (keyData: KeyData) => void): void` - Listens for key press events.
 - **Future methods will include mouse tracking and advanced key functionalities.**
 
 #### KeyData Structure:
@@ -64,6 +83,22 @@ interface KeyData {
   key: string;
 }
 ```
+
+---
+
+### `KeyEventReader`
+
+Class for listening to global keyboard events.
+
+#### Methods:
+
+- `Keys.KeyPress(KeyName,TIME);` // Default TIME 80ms
+- `Keys.KeyDown(KeyName);`
+- `Keys.KeyUp(KeyName);`
+
+`Parameters`
+
+- [KeyName](https://github.com/avinashtare/node-global-listener/blob/main/src/lib/windows/constant/windowsKeyMaps.ts) check for all keys referance. for example "A","B","F1","Delete"...
 
 ## Development
 
