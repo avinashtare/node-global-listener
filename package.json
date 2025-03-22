@@ -1,6 +1,6 @@
 {
   "name": "node-global-listener",
-  "version": "1.0.3",
+  "version": "2.0.1",
   "description": "A lightweight and efficient Node.js package for capturing global keyboard and mouse events, supporting key presses, mouse movements, input simulation, and background operation.",
   "main": "build/index.js",
   "scripts": {
