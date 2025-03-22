@@ -2,6 +2,9 @@ import keyMap from "../constant/windowsKeyMaps";
 
 // get key by value
 const getKeyCode = (findKey: string) => {
+  // conver " " into Space
+  if (findKey == " ") findKey = "Space";
+
   let FindCodes: { KeyCode: number | null; Shift: boolean } = {
     KeyCode: null,
     Shift: false,

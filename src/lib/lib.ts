@@ -4,6 +4,9 @@ import os from "os";
 
 let KeyEventReader: any = EventEmitter;
 
+// add more listeners
+process.setMaxListeners(1000);
+
 // Supported OS (use the correct value for Windows, which is 'Windows_NT')
 const supportedOS = ["Windows_NT"];
 
