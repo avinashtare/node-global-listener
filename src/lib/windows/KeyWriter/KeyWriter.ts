@@ -1,3 +1,4 @@
+import os from "os";
 import { KeyName } from "../constant/windowsKeyMaps";
 import {
   KeyDownEvent,
@@ -8,6 +9,17 @@ import {
 import { getKeyCode } from "./utils";
 
 class KeyboardHandler {
+  constructor() {
+    const supportedOS = ["Windows_NT"];
+
+    // Get current OS
+    const CurrentOS = os.type();
+    if (CurrentOS != "Windows_NT") {
+      // If the current OS is not supported, log the appropriate message
+      console.log("Your OS is not supported by this package.");
+      console.log("This package works on: ", supportedOS.toString());
+    }
+  }
   // Handle key up
   up(KeyName: KeyName): void {
     let KeyDetails = getKeyCode(KeyName);

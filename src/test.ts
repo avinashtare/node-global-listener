@@ -1,4 +1,4 @@
-import { KeyboardHandler, KeyEventReader } from "./index";
+import { KeyEventReader, KeyboardWriter } from "./index";
 import { KeyData } from "./lib/windows/keyReader/types";
 
 console.log("** Program Started **");
@@ -11,9 +11,9 @@ const keyEvent = new KeyEventReader();
 // });
 
 // Handle Key Up
-// keyEvent.on("keyUp", (keyData: KeyData) => {
-//   console.log(`KeyUp: `, keyData.key);
-// });
+keyEvent.on("keyUp", (keyData: KeyData) => {
+  console.log(`KeyUp: `, keyData.key);
+});
 
 // Handle Key Press
 // keyEvent.on("keyPress", (keyData: KeyData) => {
@@ -22,6 +22,6 @@ const keyEvent = new KeyEventReader();
 // });
 
 // ***** Keyboard Handler *****
-const Keys = new KeyboardHandler();
-// Keys.press("A"); // key press
-// Keys.down("b"); // key down
+const Keys = new KeyboardWriter();
+Keys.press("A"); // key press
+Keys.down("b"); // key down
