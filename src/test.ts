@@ -1,6 +1,7 @@
 import { KeyboardHandler, KeyEventReader } from "./index";
 import { KeyData } from "./lib/windows/keyReader/types";
 
+console.log("** Program Started **");
 // *** Key Reader ***
 const keyEvent = new KeyEventReader();
 
@@ -16,11 +17,11 @@ const keyEvent = new KeyEventReader();
 
 // Handle Key Press
 // keyEvent.on("keyPress", (keyData: KeyData) => {
+//   /*  */
 //   console.log(`KeyUp: `, keyData.key);
 // });
 
 // ***** Keyboard Handler *****
 const Keys = new KeyboardHandler();
-// Keys.KeyPress("A"); // key press
-// Keys.KeyDown("b"); // key down
-// Keys.KeyUp("B");
+// Keys.press("A"); // key press
+// Keys.down("b"); // key down

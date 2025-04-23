@@ -1,79 +1,197 @@
-import { spawn } from "child_process";
+import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import path from "path";
+import Queue from "../../utils/Queue";
 
-const KeyEvents = (KeyCode: number, action: string) => {
-  // keycode // actions('UP','DOWN')
-  let Actions = { UP: false, DOWN: false };
+type KeyActionType = {
+  UP: boolean;
+  DOWN: boolean;
+};
+type KeyCodeType = number;
 
-  // check actions
-  if (action == "UP") {
-    Actions.UP = true;
-  } else if (action == "DOWN") {
-    Actions.DOWN = true;
-  } else {
-    return 0;
+interface KeyEventType {
+  Actions: KeyActionType;
+  KeyCode: KeyCodeType;
+}
+class KeyController {
+  private executableWindowKeyAPI: ChildProcessWithoutNullStreams | null = null;
+  private KeysQueue = new Queue<KeyEventType>();
+  private KeyCode: KeyCodeType = -1;
+  private exePath: string = path.join(__dirname + "./KeysWriter.exe");
+
+  constructor() {}
+
+  runExecutable() {
+    // executable for native window api keyevent
+    this.executableWindowKeyAPI = spawn(this.exePath, [], {
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    // read data of exe file
+    this.executableWindowKeyAPI.stdout.on("data", (data) => {
+      // get exe response
+      let response = data.toString();
+
+      // handle exe outputs
+      this.handleExecutableOutput(response);
+    });
+
+    // kill Ctrl+c and some error occured
+    this.killAndErrorHandlers();
   }
 
-  // run windows keypress file to press up down keys
-  const child = spawn(path.join(__dirname + "./KeyWriter.exe"), [], {
-    stdio: ["pipe", "pipe", "pipe"],
-  });
-
-  // read data of iexe file
-  child.stdout.on("data", (data) => {
-    // get exe response
-    let reposne = data.toString();
-
+  handleExecutableOutput(response: string) {
     // check for options
-    if (reposne.includes("Enter a option (0.Exit,1.KeyUp,2.KeyDown):")) {
-      if (Actions.UP) {
-        child.stdin.write("1\n");
-      } else if (Actions.DOWN) {
-        child.stdin.write("2\n");
-      } else {
-        child.stdin.write("0\n");
+    if (
+      response.includes("Enter a option (0.Exit,1.KeyUp,2.KeyDown):") ||
+      response.includes("Check Queue")
+    ) {
+      // get keysdata from queue
+      const CurrentKeyEventData: KeyEventType | null | undefined =
+        this.KeysQueue.dequeue();
+
+      if (CurrentKeyEventData && this.executableWindowKeyAPI) {
+        this.KeyCode = CurrentKeyEventData.KeyCode;
+
+        // check event
+        if (CurrentKeyEventData.Actions.UP) {
+          this.executableWindowKeyAPI.stdin.write("1\n");
+        } else if (CurrentKeyEventData.Actions.DOWN) {
+          this.executableWindowKeyAPI.stdin.write("2\n");
+        }
       }
-    } else if (reposne.includes("Enter Key Code: ")) {
-      setTimeout(() => {
-        child.stdin.write(`${KeyCode}\n`);
-        Actions = { UP: false, DOWN: false };
-      }, 1000);
-    } else {
-      child.stdin.write("0\n");
+      // waiting for keys
+      else {
+        if (this.KeysQueue.size() > 0) {
+          this.handleExecutableOutput("Check Queue");
+        } else {
+          let waitingInterval = setInterval(() => {
+            if (this.KeysQueue.size() > 0) {
+              clearInterval(waitingInterval);
+
+              // call it's self to clear the queue remaing event
+              this.handleExecutableOutput("Check Queue");
+            }
+          }, 500);
+          // Ctrl + c exit in interval
+          process.on("SIGINT", () => {
+            clearInterval(waitingInterval);
+          });
+        }
+      }
     }
-  });
 
-  // Handle process exit when Ctrl+C is pressed on console
-  process.on("SIGINT", () => {
-    // console.log("kill");
-    child.stdout.destroy();
-    child.stdin.destroy();
-  });
+    // write key  you want to press
+    else if (
+      response.includes("Enter Key Code: ") &&
+      this.executableWindowKeyAPI
+    ) {
+      if (this.KeyCode > 0) {
+        this.executableWindowKeyAPI.stdin.write(`${this.KeyCode}\n`);
+        this.KeyCode = -1;
+      }
+    }
+  }
 
-  // if any error occurs
-  child.on("error", (message) => {
-    // console.log(`error ${message}`);
-    child.stdout.destroy();
-    child.stdin.destroy();
-  });
-};
+  isRunning() {
+    // exitCode is null while the process is running,
+    return (
+      this.executableWindowKeyAPI &&
+      this.executableWindowKeyAPI.exitCode === null
+    );
+  }
+
+  killAndErrorHandlers() {
+    // Handle process exit when Ctrl+C is pressed on console
+    process.on("SIGINT", () => {
+      if (this.executableWindowKeyAPI) {
+        this.executableWindowKeyAPI.stdin.destroy();
+        this.executableWindowKeyAPI.stdin.destroy();
+      }
+    });
+
+    // if any error occurs or exit
+    if (this.executableWindowKeyAPI) {
+      // detect exit (both normal & crashes)
+      this.executableWindowKeyAPI.on("exit", (code, signal) => {
+        if (signal) {
+          console.error(`KeyWriter was killed by signal: ${signal}`);
+          process.exit();
+        } else {
+          // console.log("Child exited cleanly (code 0).");
+        }
+      });
+
+      this.executableWindowKeyAPI.on("error", (err: NodeJS.ErrnoException) => {
+        // if exe not exist
+        if (err.code == "ENOENT") {
+          console.error(`Executable not found at ${err.message}`);
+          process.exit();
+        } else if (err.code === "EACCES") {
+          console.error(` No permission to execute`);
+        }
+
+        if (!this.isRunning && this.executableWindowKeyAPI) {
+          // other error
+          console.log(`error ${err}`);
+          this.executableWindowKeyAPI.stdout.destroy();
+
+          // respwin if process is not running or error is occured
+          this.executableWindowKeyAPI = null;
+          // Try again after delay
+          setTimeout(() => this.runExecutable(), 3000);
+        }
+      });
+    }
+  }
+
+  close() {
+    this.executableWindowKeyAPI?.kill();
+  }
+
+  execute(KeyCode: KeyCodeType, KeyAction: string) {
+    if (typeof KeyCode != "number") return;
+
+    let Actions: KeyActionType = { UP: false, DOWN: false };
+    // check key action
+    if (KeyAction == "UP") {
+      Actions.UP = true;
+    } else if (KeyAction == "DOWN") {
+      Actions.DOWN = true;
+    }
+
+    // add key in queue
+    this.KeysQueue.enqueue({ Actions, KeyCode });
+
+    if (!this.executableWindowKeyAPI) {
+      // start exe
+      this.runExecutable();
+    }
+  }
+}
+
+// init instance
+const KeyEvents = new KeyController();
 
 // hanlde key up
-const KeyUpEvent = (KeyCode: number) => {
-  KeyEvents(KeyCode, "UP");
+const KeyUpEvent = (KeyCode: KeyCodeType) => {
+  KeyEvents.execute(KeyCode, "UP");
 };
 
 // hanlde key down
-const KeyDownEvent = (KeyCode: number) => {
-  KeyEvents(KeyCode, "DOWN");
+const KeyDownEvent = (KeyCode: KeyCodeType) => {
+  KeyEvents.execute(KeyCode, "DOWN");
 };
 
 // hanlde key press
-const KeyPressEvent = (KeyCode: number, TIMEOUT = 80) => {
+const KeyPressEvent = (KeyCode: KeyCodeType, TIMEOUT = 80) => {
   KeyDownEvent(KeyCode);
   setTimeout(() => {
     KeyUpEvent(KeyCode);
   }, TIMEOUT);
 };
 
-export { KeyUpEvent, KeyDownEvent, KeyPressEvent };
+const closeKeyEvent = () => {
+  KeyEvents.close();
+};
+
+export { KeyUpEvent, KeyDownEvent, KeyPressEvent, closeKeyEvent };

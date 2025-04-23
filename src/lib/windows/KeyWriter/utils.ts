@@ -1,7 +1,7 @@
-import keyMap from "../constant/windowsKeyMaps";
+import { keyMap, KeyName } from "../constant/windowsKeyMaps";
 
 // get key by value
-const getKeyCode = (findKey: string) => {
+const getKeyCode = (findKey: KeyName) => {
   // conver " " into Space
   if (findKey == " ") findKey = "Space";
 

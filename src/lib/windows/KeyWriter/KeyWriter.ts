@@ -1,9 +1,15 @@
-import { KeyDownEvent, KeyUpEvent, KeyPressEvent } from "./KeyWriterActions";
+import { KeyName } from "../constant/windowsKeyMaps";
+import {
+  KeyDownEvent,
+  KeyUpEvent,
+  KeyPressEvent,
+  closeKeyEvent,
+} from "./KeyWriterActions";
 import { getKeyCode } from "./utils";
 
 class KeyboardHandler {
   // Handle key up
-  KeyUp(KeyName: string): void {
+  up(KeyName: KeyName): void {
     let KeyDetails = getKeyCode(KeyName);
     if (KeyDetails.KeyCode == null) return;
     if (KeyDetails.Shift) {
@@ -15,7 +21,7 @@ class KeyboardHandler {
   }
 
   // Handle key down
-  KeyDown(KeyName: string): void {
+  down(KeyName: KeyName): void {
     let KeyDetails = getKeyCode(KeyName);
     if (KeyDetails.KeyCode == null) return;
     if (KeyDetails.Shift) {
@@ -28,7 +34,7 @@ class KeyboardHandler {
   }
 
   // Handle key press
-  KeyPress(KeyName: string, TIMEOUT = 80): void {
+  press(KeyName: KeyName, TIMEOUT = 10): void {
     let KeyDetails = getKeyCode(KeyName);
     if (KeyDetails.KeyCode == null) return;
     if (KeyDetails.Shift) {
@@ -38,6 +44,10 @@ class KeyboardHandler {
     } else {
       KeyPressEvent(KeyDetails.KeyCode, TIMEOUT);
     }
+  }
+
+  close() {
+    closeKeyEvent();
   }
 }
 

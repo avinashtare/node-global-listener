@@ -26,10 +26,10 @@ WORD getKeyCode()
     return KeyCode;
 }
 
-int main()
+void runKeylistener()
 {
-    int stop = 1;
-    int option = 4;
+    int keepRunning = true;
+    int option = -1;
 
     // keyup 1
     // keydown 2
@@ -37,23 +37,30 @@ int main()
     {
         /* code */
 
-        while (stop)
+        while (keepRunning)
         {
             std::cout << "Enter a option (0.Exit,1.KeyUp,2.KeyDown): ";
             std::cin >> option;
-            if (option == 1)
+
+            switch (option)
             {
+            // KEYUP
+            case 1:
                 WORD KeyCode = getKeyCode();
                 KeyUp(KeyCode);
-            }
-            else if (option == 2)
-            {
+                break;
+            // KEYDOWN
+            case 2:
                 WORD KeyCode = getKeyCode();
                 KeyDown(KeyCode);
-            }
-            else
-            {
-                stop = 0;
+                break;
+            // STOP
+            case 0:
+                keepRunning = false;
+            // INVALID OPTION
+            default:
+                keepRunning = true;
+                break;
             }
         }
     }
@@ -61,5 +68,10 @@ int main()
     {
         // std::cout << e.what();
     }
+}
+
+int main()
+{
+
     return 0;
 }

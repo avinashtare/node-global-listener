@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 import { EventEmitter } from "events";
 import path from "path";
-import WinkeyMap from "../constant/windowsKeyMaps";
+import { keyMap } from "../constant/windowsKeyMaps";
 import { KeyData } from "./types";
 
 // creating custom event
@@ -88,7 +88,7 @@ class KeyEventReader extends EventEmitter {
     let key = null;
     // fist find deafult value if available
     try {
-      key = WinkeyMap[keyFillterData.KeyCode];
+      key = keyMap[keyFillterData.KeyCode];
     } catch (error) {}
 
     // mapping for caps lock
@@ -106,7 +106,7 @@ class KeyEventReader extends EventEmitter {
         keyFillterData.KeyCode <= 90 &&
         keyFillterData.Shift)
     ) {
-      key = WinkeyMap[keyFillterData.KeyCode].shift;
+      key = keyMap[keyFillterData.KeyCode].shift;
     } else if (
       // number mapping
       (keyFillterData.KeyCode >= 48 &&
@@ -121,7 +121,7 @@ class KeyEventReader extends EventEmitter {
         keyFillterData.KeyCode <= 90 &&
         !keyFillterData.Shift)
     ) {
-      key = WinkeyMap[keyFillterData.KeyCode].normal;
+      key = keyMap[keyFillterData.KeyCode].normal;
     }
 
     // key set only for CapsLock
@@ -131,7 +131,7 @@ class KeyEventReader extends EventEmitter {
       keyFillterData.KeyCode <= 90 &&
       keyFillterData.CapsLock
     ) {
-      key = WinkeyMap[keyFillterData.KeyCode].shift;
+      key = keyMap[keyFillterData.KeyCode].shift;
     }
     // set value in object
     keyFillterData.key = key;
