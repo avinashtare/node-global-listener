@@ -23,5 +23,5 @@ keyEvent.on("keyUp", (keyData: KeyData) => {
 
 // ***** Keyboard Handler *****
 const Keys = new KeyboardWriter();
-Keys.press("A"); // key press
-Keys.down("b"); // key down
+// Keys.press("A"); // key press
+// Keys.down("b"); // key down

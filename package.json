@@ -17,6 +17,14 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avinashtare/node-global-listener.git"
+  },
+  "bugs": {
+    "url": "https://github.com/avinashtare/node-global-listener/issues"
+  },
+  "homepage": "https://github.com/avinashtare/node-global-listener#readme",
   "author": "avinashtare",
   "license": "MIT",
   "keywords": [
