@@ -1,6 +1,8 @@
-# node-global-listener
+# [node-global-listener 💫](https://avinashtare.github.io/node-global-listener/)
 
-A lightweight and efficient Node.js package for capturing global keyboard and mouse events, supporting key presses, mouse movements, input simulation, and background operation. 🚀
+lightweight and efficient Node.js package for capturing global keyboard and mouse events, supporting key presses, mouse movements, input simulation, and background operation.
+
+`Keys`:- F1,WINDOW,HOME,DELTE,A-Z,ETC...
 
 ## Installation
 
@@ -10,24 +12,27 @@ npm install node-global-listener
 
 **Compatibility Table:**
 
-| Platform | Compatible? | Tested      |
-| -------- | ----------- | ----------- |
-| Windows  | True        | Win10,Win11 |
-| Mac      | Coming Soon | Null        |
-| Linux    | Coming Soon | Null        |
+| Platform   | Compatible? | Tested      |
+| ---------- | ----------- | ----------- |
+| ✅ Windows | True        | Win10,Win11 |
+| ❌ Mac     | Coming Soon | Null        |
+| ❌ Linux   | Coming Soon | Null        |
 
 ## Features
 
-- ✅ Keyboard Events: Detect and record key presses, releases, and combinations.
-- ✅ Mouse Events: Track mouse position, clicks, and button presses.
-- ✅ Input Simulation: Read and write keyboard inputs programmatically.
-- ✅ Background Operation: Works seamlessly without interfering with other applications.
-  Ideal for automation, keylogging (ethical use), and input monitoring. 🚀
+- ✅ `Keyboard Events`: Detect and record key presses, releases, and combinations.
+- ✅ `Mouse Events`: Track mouse position, clicks, and button presses.
+- ✅ `Input Simulation`: Read and write keyboard inputs programmatically.
+- ✅`Background Operation`: Works seamlessly without interfering with other applications.
+  Ideal for automation, keylogging (ethical use), and input monitoring.
+- ✅`Lightweight`: Uses minimal system resources, ensuring smooth performance even on low-end devices. Perfect for running silently in the background without impacting speed or responsiveness.
+
+## Example
 
 ### Importing the Module
 
 ```ts
-import { KeyboardHandler, KeyEventReader } from "node-global-listener";
+import { KeyboardWriter, KeyEventReader } from "node-global-listener";
 ```
 
 ### Start Listening to Keyboard Events
@@ -50,14 +55,25 @@ keyEvent.on("keyUp", (keyData) => {
 
 ### Start Listening to Press (Writing) Keys
 
-### `KeyboardHandler`
+### `KeyboardWriter`
 
 ```ts
-const Keys = new KeyboardHandler();
-Keys.KeyPress("A"); // key press
-Keys.KeyDown("b"); // key down
-Keys.KeyUp("B"); // key up
+const Keys = new KeyboardWriter();
+Keys.press("A"); // key press
+Keys.down("b"); // key down
+Keys.up("B"); // key up
 ```
+
+- [KeyName](https://github.com/avinashtare/node-global-listener/blob/main/src/lib/windows/constant/windowsKeyMaps.ts) check for all keys referance. for example "A","B","F1","Delete"...
+
+## Documentation
+
+Visit [documentation](https://avinashtare.github.io/node-global-listener/doc) website.
+
+The documentation is divided into several sections:
+
+- [Quick Start]()
+- [Installation]()
 
 ## API
 
@@ -86,15 +102,15 @@ interface KeyData {
 
 ---
 
-### `KeyEventReader`
+### `KeyboardWriter`
 
 Class for listening to global keyboard events.
 
 #### Methods:
 
-- `Keys.KeyPress(KeyName,TIME);` // Default TIME 80ms
-- `Keys.KeyDown(KeyName);`
-- `Keys.KeyUp(KeyName);`
+- `Keys.press(KeyName,TIME);` // Default TIME 80ms
+- `Keys.up(KeyName);`
+- `Keys.down(KeyName);`
 
 `Parameters`
 

@@ -16,7 +16,6 @@ int main()
         {
             std::cerr << "Failed to get mouse position" << std::endl;
         }
-        Sleep(80);
     }
     return 0;
 }

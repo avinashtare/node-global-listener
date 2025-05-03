@@ -71,7 +71,7 @@ class KeyController {
               // call it's self to clear the queue remaing event
               this.handleExecutableOutput("Check Queue");
             }
-          }, 500);
+          }, 300);
           // Ctrl + c exit in interval
           process.on("SIGINT", () => {
             clearInterval(waitingInterval);

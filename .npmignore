@@ -1,6 +1,6 @@
 node_modules
-build
 .env
-todo.txt
 mybuild
 /docs
+/src
+/web
